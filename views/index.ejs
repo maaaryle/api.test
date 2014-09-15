@@ -13,14 +13,34 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars-v2.0.0.js"></script>
     <script>
+      var module = { exports: {} };
+    </script>
+    <script src="/javascripts/util.js"></script>
+    <script>
       $(function() {
+        var gravatarLookup = "<%= gravatarLookup %>";
         var source   = $("#template").html();
         var template = Handlebars.compile(source);
         var data = {};
 
+        var gravatarUrl = function(email) {
+          return "http://www.gravatar.com/avatar/" + md5(email);
+        };
+
         var refreshView = function(){
             var html = template(data);
             $(".output").html(html);
+            $(".gravatar-img").each(function(i, e) {
+              var $e = $(e);
+              var thisEmail = $e.data("email");
+              if (gravatarLookup === "api") {
+                $.ajax("/api/gravatar/" + thisEmail).then(function(data) {
+                  $e.attr("src", data).removeClass("hidden");
+                });
+              } else {
+                $e.attr("src", gravatarUrl(thisEmail)).removeClass("hidden");
+              }
+            });
         };
 
         refreshView({});
@@ -81,11 +101,15 @@
     <script id="template" type="text/x-handlebars-template">
       <table class="table table-striped">
       <tr>
+        <th></th>
         <th>Email</th>
         <th>Question</th>
       </tr>
       {{#each questions}}
         <tr data-code="{{code}}" data-index="{{@index}}">
+          <td>
+            <img class="hidden gravatar-img" src="" data-email="{{email}}">
+          </td>
           <td>{{email}}</td>
           <td>
             {{#if editing}}
