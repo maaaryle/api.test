@@ -14,18 +14,56 @@
     <script src="http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars-v2.0.0.js"></script>
     <script>
       $(function() {
+        var source   = $("#template").html();
+        var template = Handlebars.compile(source);
+        var data = { tweets: [] };
+
+        var refreshView = function(){
+          var html = template(data);
+          $(".output").html(html);
+        };
+
+        refreshView();
+
+
+        $("#twitter-search").on("click", function() {
+          $.ajax().then(function(data) {
+          });
+        });
+      });
     </script>
 
   </head>
   <body>
     <div class="container">
       <div class="well">
-      <form class="form-horizontal" action="/twitter">
-        <textarea rows="4" class="form-control" placeholder="Tweet here">
+      <form class="form-horizontal" action="/twitter" method="POST">
+        <textarea name="tweet" rows="4" class="form-control" placeholder="Tweet here">
         </textarea>
         <button type="submit" class="btn btn-success">Tweet</button>
       </form>
       </div>
+      <div class="well">
+        <form class="form-horizontal" action="/twitter-search" method="POST">
+          <input name="query" class="form-control" placeholder="Search twitter">
+          </textarea>
+          <button id="twitter-search" type="submit" class="btn btn-success">search</button>
+        </form>
+      </div>
+
+      <h2>Twitter Search Results</h2>
+      <div class="output">
+      </div>
+      <script id="template" type="text/x-handlebars-template">
+        {{#each tweets}}
+          <div class="tweet">
+            {{body}}
+          </div>
+        {{else}}
+          No results found
+        {{/each}}
+      </script>
+
     </div>
   </body>
 </html>
