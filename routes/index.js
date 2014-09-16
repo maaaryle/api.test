@@ -32,4 +32,10 @@ router.post('/twitter', function(req, res) {
   res.redirect("/twitter");
 });
 
+router.post('/twitter-search', function(req, res) {
+  T.get('search/tweets', { q: req.body.query, count: 100 }, function(err, data, response) {
+    res.json(data)
+  })
+});
+
 module.exports = router;

@@ -60,5 +60,30 @@ app.use(function(err, req, res, next) {
     });
 });
 
+// var Mailgun = require('mailgun').Mailgun;
+
+// var mg = new Mailgun(process.env.MG_API_KEY);
+// mg.sendText('nick@prmatch.com', 'samer.buna@gmail.com',
+//   'This is the subject',
+//   'This is the text',
+//   function(err) {
+//     if (err) console.log('Oh noes: ' + err);
+//     else     console.log('Success');
+// });
+
+var Twit = require('twit');
+
+var T = new Twit({
+  consumer_key: process.env.CONSUMER_KEY
+  , consumer_secret: process.env.CONSUMER_SECRET
+  , access_token: process.env.ACCESS_TOKEN
+  , access_token_secret: process.env.ACCESS_TOKEN_SECRET
+});
+
+var stream = T.stream("statuses/filter", { track: 'codinghouse' });
+
+stream.on("tweet", function(tweet) {
+  console.log(tweet.text);
+});
 
 module.exports = app;
