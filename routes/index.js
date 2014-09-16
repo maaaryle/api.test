@@ -10,4 +10,8 @@ router.get('/', function(req, res) {
   res.render('index', { title: 'Express', gravatarLookup: gravatarLookup });
 });
 
+router.get('/twitter', function(req, res) {
+  res.render('twitter');
+});
+
 module.exports = router;
