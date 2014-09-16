@@ -56,7 +56,7 @@ router.delete("/questions/:questionCode", function(req, res) {
     if (err) {
       res.json(500, { error: 'we suck' });
     }
-    res.json({ message: 'document delete' });
+    res.json({ message: 'question deleted' });
   });
 });
 
@@ -67,9 +67,6 @@ router.put('/questions/:questionCode', function(req, res) {
       return res.json(500, { error: 'could not process request'});
     }
     if (question) {
-      if (req.body.email) {
-        question.email = req.body.email;
-      }
       if (req.body.question) {
         question.question = req.body.question
       }
